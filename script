@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Data pipeline using shell script commands
+# Reads directory structure in Music directory and prints report
+# of total tracks, total artists, multigenere artists and multitrack
+# disks.
+# CSS 390 Assignment 1 - UWB Fall 2016 Denise Moran morandy@uw.edu
+
+
+cd Music
+#print total tracks
+echo -n Total Tracks:\ 
+ls -lR | 	#lists directory
+grep .*.ogg | 	#finds matches with .ogg
+wc -l		#prints count
+echo ' '
+#print total artists
+echo -n Total Artists:\ 
+find . -maxdepth 2 -mindepth 2 -type d -exec basename {} \;|
+sort | uniq | wc -l #sorts output of find, deletes duplicates, counts artists
+echo ' '
+#print multigenre artists
+echo Multi-Genre Artists:
+#counts all directories 2 levels deep
+find . -maxdepth 2 -mindepth 2 -type d -exec basename {} \; |
+sort | uniq -d --repeated #sorts find output, deletes unique artists
+echo ' '
+#print multidisk albums
+echo Multi-Disk Albums:
+#finds all directories containing disk*
+find . -type d -name 'disk*' -exec dirname {} \; |
+sed 's/\.\/.*\///'| #removes path to directory
+sort | uniq #sorts list and removed duplicates
